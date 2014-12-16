@@ -1,12 +1,3 @@
-Router.route('/', function () {
-  this.render('Home', {
-    data: function () {
-      return {}
-    }
-  });
-});
-
-
 Books = new Mongo.Collection("books");
 
 Books.attachSchema(new SimpleSchema({
@@ -25,7 +16,6 @@ Books.attachSchema(new SimpleSchema({
     autoform: {
 
       options: function () {
-        // important having options as function because of Helpers
         return [
           {
             value: "dohomi", label: "Dohomi"
@@ -43,9 +33,7 @@ Books.attachSchema(new SimpleSchema({
       return "Authors";
     },
     autoform: {
-
       options: function () {
-        // important having options as function because of Helpers
         return [
           {
             value: "dohomi", label: "Dohomi"
@@ -72,13 +60,13 @@ if (Meteor.isClient) {
   });
 
   Template.home.events({
-    'form submit': function (e) {
+    'submit form': function (e) {
       e.preventDefault();
+      console.log("submit event prevented");
+      return false;
     }
   });
 }
-
-
 if(Meteor.isServer){
 
   if(!Books.findOne()){

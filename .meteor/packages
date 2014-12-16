@@ -7,7 +7,5 @@ meteor-platform
 autopublish
 insecure
 aldeed:autoform
-iron:router
 aldeed:collection2
 mizzao:bootstrap-3
-
