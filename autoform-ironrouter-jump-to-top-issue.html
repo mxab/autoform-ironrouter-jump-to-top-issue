@@ -1,0 +1,14 @@
+<template name="home">
+    <!--validation="keyup"-->
+    {{#autoForm collection=Books doc=theBook  type="update" }}
+
+        {{> afQuickField name='title' }}
+
+    <img src="http://placekitten.com/g/200/900">
+        {{> afQuickField name='authors' }}
+        {{> afQuickField name='mainAuthor' }}
+
+        <button>Update</button>
+    {{/autoForm}}
+
+</template>
