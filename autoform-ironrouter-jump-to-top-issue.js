@@ -25,7 +25,6 @@ Books.attachSchema(new SimpleSchema({
     autoform: {
 
       options: function () {
-        // important having options as function because of Helpers
         return [
           {
             value: "dohomi", label: "Dohomi"
@@ -45,7 +44,6 @@ Books.attachSchema(new SimpleSchema({
     autoform: {
 
       options: function () {
-        // important having options as function because of Helpers
         return [
           {
             value: "dohomi", label: "Dohomi"
@@ -72,8 +70,9 @@ if (Meteor.isClient) {
   });
 
   Template.home.events({
-    'form submit': function (e) {
+    'submit form': function (e) {
       e.preventDefault();
+      return false;
     }
   });
 }
