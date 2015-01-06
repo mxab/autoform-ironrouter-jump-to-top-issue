@@ -1,50 +1,5 @@
 Books = new Mongo.Collection("books");
 
-Books.attachSchema(new SimpleSchema({
-  title: {
-    type: String,
-    label: "Title",
-    max: 200
-  },
-
-  mainAuthor: {
-    type: String,
-    optional: true,
-    label: function () {
-      return "Main Authors";
-    },
-    autoform: {
-
-      options: function () {
-        return [
-          {
-            value: "dohomi", label: "Dohomi"
-          },
-          {
-            value: "mxab", label: "Mxab"
-          }]
-      }
-    }
-  },
-  authors: {
-    type: [String],
-    optional: true,
-    label: function () {
-      return "Authors";
-    },
-    autoform: {
-      options: function () {
-        return [
-          {
-            value: "dohomi", label: "Dohomi"
-          },
-          {
-            value: "mxab", label: "Mxab"
-          }]
-      }
-    }
-  }
-}));
 
 if (Meteor.isClient) {
   // counter starts at 0
@@ -54,8 +9,27 @@ if (Meteor.isClient) {
     Books: function () {
       return Books
     },
-    theBook : function(){
+    theBook: function () {
       return Books.findOne();
+    },
+    allAuthors: function () {
+      return [
+        {value: "dohomi", label: "Dohomi"},
+        {value: "mxab", label: "MxAb"}
+      ]
+    },
+    isSelected: function () {
+      var book = Books.findOne("sample");
+      if (book) {
+
+
+        var authorsOfTheBook = book.authors;
+
+        var selectedCheck = authorsOfTheBook && authorsOfTheBook.length && $.inArray(this.value, authorsOfTheBook);
+        console.log("is selected", this, selectedCheck);
+
+        return selectedCheck && selectedCheck >=0;
+      }
     }
   });
 
@@ -63,13 +37,36 @@ if (Meteor.isClient) {
     'submit form': function (e) {
       e.preventDefault();
       console.log("submit event prevented");
+
+      var $form = $(e.target).closest("form");
+      var title = $form.find("[name=title]").val();
+      var authors = $form.find("[name=authors]").val();
+
+      var update = {};
+      if (title) {
+        update["$set"] = update["$set"] || {};
+        update["$set"]["title"] = title;
+      } else {
+        update["$unset"] = update["$unset"] || {};
+        update["$unset"]["title"] = "";
+      }
+      if (authors && authors.length) {
+        update["$set"] = update["$set"] || {};
+        update["$set"]["authors"] = authors;
+      } else {
+        update["$unset"] = update["$unset"] || {};
+        update["$unset"]["authors"] = authors
+
+      }
+      Books.update("sample", update);
+
       return false;
     }
   });
 }
-if(Meteor.isServer){
+if (Meteor.isServer) {
 
-  if(!Books.findOne()){
-    Books.insert({title: "The Autoform", authors:["dohomi"]})
+  if (!Books.findOne()) {
+    Books.insert({_id:"sample", title: "The Autoform", authors: ["dohomi"]})
   }
 }
